@@ -23,25 +23,21 @@ select ((array_replace(
 -- с помощью функций преобразования строки в массив
 -- выполните разделение строки на элементы массива и верните отдельно Фамилию и Имя
 --Пример: 'Городецкая, Светлана'
-select b
+
+-- разделил в таблицу
+select split_part(a[1], '_', 2) as "Фамилия", split_part(a[2], '_', 2) as "имя"
+from string_to_array('Ваша_Фамилия, Ваше_Имя', ', ') as a;
+
+-- вывел части через зарятую
+select parts.f ||', '|| parts.n
 from (
-	select (string_to_array(a[1], '_') || string_to_array(a[2], '_')) 
+	select split_part(a[1], '_', 2) as f, split_part(a[2], '_', 2) as n
 	from string_to_array('Ваша_Фамилия, Ваше_Имя', ', ') as a
---	;
-) as b;
+) as parts;
 
+select a[1] as "Фамилия", a[2] as "Имя"
+from string_to_array('Ваша_Фамилия, Ваше_Имя', ', ') as a;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- отбросил лишние элементы
+select substring(a[1] from position('_'  in a[1])+1) as "Фамилия", substring(a[2] from position('_' in a[2])+1) as "Имя"
+from string_to_array('Ваша_Фамилия, Ваше_Имя', ', ') as a;

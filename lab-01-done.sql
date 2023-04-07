@@ -6,11 +6,31 @@ select * from "Production"."Products";
 select country, region, city from "Sales"."Customers";
 select productname, unitprice from "Production"."Products" order by unitprice desc;
 
+-- Задание 3. Написание запросов с вычисляемыми столбцами
+-- 3.1 На основе таблицы Employees напишите запрос, возвращающий таблицу из 3 столбцов:
+	-- Фамилия сотрудника,
+	-- Имя сотрудника,
+	-- e-mail адрес.
+-- Столбец e-mail адрес должен быть сформирован в соответствие со следующим шаблоном:
+-- <имя>.<фамилия>@<названиеорганизации>.ru.
+-- Название организации придумайте сами!
+-- Полученные e-mail должны быть в нижнем регистре.
+-- Символы, недопустимые в адресе эл.почты, должны быть заменены нижним подчеркиванием.
 select firstname as "Имя"
 		, lastname as "Фамилия"
-		, regexp_replace('mail@domain.region', 'mail', firstname||'.'||lastname) as "e-mail адрес"
+		,lower(
+			regexp_replace(
+				regexp_replace(
+					'mail@domain.region'
+					, 'mail'
+					, firstname||'.'||lastname
+					)
+				, '[~!#$%^&*()+=\\{}[\]:”;’<,>\/?]'
+				, '_'
+			)
+		)
+		as "e-mail адрес"
 from "HR"."Employees";
-
 
 select categoryid as "Номер категории",
 		productname as "Название продукта"
